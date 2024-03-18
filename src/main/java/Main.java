@@ -4,9 +4,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
-  public static final String OK = "HTTP/1.1 200 OK\r\n\r\n";
-  public static final String NOT_FOUND = "HTTP/1.1 404 Not Found\r\n\r\n";
-  
+  public static final String OK = "HTTP/1.1 200 OK";
+  public static final String NOT_FOUND = "HTTP/1.1 404 Not Found";
+  public static final String EOF = "\r\n\r\n";
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
@@ -28,7 +28,7 @@ public class Main {
       String path = getPath(request);
       String body = getBodyFromPath(path);
       System.out.println("Got body " + body);
-      
+
       System.out.println("responding...");
       respond(o, body);
       
@@ -54,7 +54,7 @@ public class Main {
     w.write(OK + "\r\n");
     w.write("Content-Type: text/plain\r\n");
     w.write("Content-Length: " + msg.length() + "\r\n\r\n");
-    w.write(msg);
+    w.write(msg + EOF);
     w.close();
   }
 
