@@ -26,15 +26,12 @@ public class Main {
       System.out.println("reading input...");
       String request = readInputStream(i);
       String path = getPath(request);
-
+      String body = getBodyFromPath(path);
+      System.out.println("Got body " + body);
+      
       System.out.println("responding...");
-      if (path.equals("/")) {
-        respond(o, OK);
-      }
-      else {
-        respond(o, NOT_FOUND);
-      }
-
+      respond(o, body);
+      
       System.out.println("wrote response to socket");
       
 
@@ -47,8 +44,16 @@ public class Main {
     }
   }
 
+  public static String getBodyFromPath(String path) {
+    String body = path.substring(6);
+    return body;
+  }
+
   public static void respond(OutputStream out, String msg) {
     PrintWriter w = new PrintWriter(out);
+    w.write(OK + "\r\n");
+    w.write("Content-Type: text/plain\r\n");
+    w.write("Content-Length: " + msg.length() + "\r\n\r\n");
     w.write(msg);
     w.close();
   }
