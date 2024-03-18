@@ -1,4 +1,5 @@
-import java.io.IOException;
+import java.util.*;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -15,6 +16,26 @@ public class Main {
       serverSocket.setReuseAddress(true);
       clientSocket = serverSocket.accept();
       System.out.println("accepted new connection");
+      InputStream in = clientSocket.getInputStream();
+      OutputStream out = clientSocket.getOutputStream();
+      Scanner scn = new Scanner(in);
+      PrintWriter w = new PrintWriter(out);
+      
+      byte[] input = in.readAllBytes();
+      String s = new String(input);
+      
+      /*
+      String s = scn.nextLine();
+      while (s != null) {
+        s = scn.nextLine();
+      }
+      */
+      //w.write("HTTP/1.1 200 OK\r\n\r\n");
+      scn.close();
+      w.close();
+      in.close();
+      out.close();
+
     }
     catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
