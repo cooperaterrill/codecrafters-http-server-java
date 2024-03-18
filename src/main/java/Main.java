@@ -4,14 +4,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
-  public static final String OK = "HTTP\1.1 200 OK\r\n\r\n";
+  public static final String OK = "HTTP\\1.1 200 OK\r\n\r\n";
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
-
+    //System.out.println("OK request looks like: " + OK);
     try {
       serverSocket = new ServerSocket(4221);
       serverSocket.setReuseAddress(true);
