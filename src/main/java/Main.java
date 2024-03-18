@@ -20,8 +20,6 @@ public class Main {
 
       InputStream i = clientSocket.getInputStream();
       OutputStream o = clientSocket.getOutputStream();
-
-      PrintWriter out = new PrintWriter(o);
       
       System.out.println("reading input...");
       byte[] input = i.readAllBytes();
@@ -30,6 +28,7 @@ public class Main {
       System.out.println("responding...");
       
       o.write(OK.getBytes());
+      o.flush();
       System.out.println("wrote response to socket");
       /*
       String s = scn.nextLine();
@@ -38,13 +37,10 @@ public class Main {
       }
       */
       //w.write("HTTP/1.1 200 OK\r\n\r\n");
-      i.close();
-      o.close();
-
-      out.close();
 
       serverSocket.close();
       clientSocket.close();
+      System.out.println("sockets closed");
     }
     catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
