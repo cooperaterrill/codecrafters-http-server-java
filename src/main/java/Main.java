@@ -6,6 +6,7 @@ import java.net.Socket;
 public class Main {
   public static final String OK = "HTTP/1.1 200 OK\r\n\r\n";
   public static final String NOT_FOUND = "HTTP/1.1 404 Not Found\r\n\r\n";
+  
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
@@ -24,7 +25,6 @@ public class Main {
       
       System.out.println("reading input...");
       String request = readInputStream(i);
-      System.out.println("Got request: " + request);
       String path = getPath(request);
 
       System.out.println("responding...");
@@ -36,13 +36,7 @@ public class Main {
       }
 
       System.out.println("wrote response to socket");
-      /*
-      String s = scn.nextLine();
-      while (s != null) {
-        s = scn.nextLine();
-      }
-      */
-      //w.write("HTTP/1.1 200 OK\r\n\r\n");
+      
 
       serverSocket.close();
       clientSocket.close();
@@ -71,9 +65,12 @@ public class Main {
     StringBuffer res = new StringBuffer();
 
     String line = "";
-    while((line = r.readLine()) != null && line.isEmpty()) {
-      res.append(line);
+    int i = 0;
+    while((line = r.readLine()) != null && !line.isEmpty()) {
+      res.append(line.strip() + "\r\n");
+      i++;
     }
+    System.out.println("Read " + i + " lines");
     
     return res.toString();
   }
