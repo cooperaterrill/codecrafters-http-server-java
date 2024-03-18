@@ -21,9 +21,11 @@ public class Main {
       InputStream i = clientSocket.getInputStream();
       OutputStream o = clientSocket.getOutputStream();
       
+      /*
       System.out.println("reading input...");
       byte[] input = i.readAllBytes();
       String s = new String(input);
+      */
 
       System.out.println("responding...");
       
