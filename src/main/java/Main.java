@@ -4,6 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
+  public static final String OK = "HTTP\1.1 200 OK\r\n\r\n";
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
@@ -16,14 +17,20 @@ public class Main {
       serverSocket.setReuseAddress(true);
       clientSocket = serverSocket.accept();
       System.out.println("accepted new connection");
-      InputStream in = clientSocket.getInputStream();
-      OutputStream out = clientSocket.getOutputStream();
-      Scanner scn = new Scanner(in);
-      PrintWriter w = new PrintWriter(out);
+
+      InputStream i = clientSocket.getInputStream();
+      OutputStream o = clientSocket.getOutputStream();
+
+      PrintWriter out = new PrintWriter(o);
       
-      byte[] input = in.readAllBytes();
+      System.out.println("reading input...");
+      byte[] input = i.readAllBytes();
       String s = new String(input);
+
+      System.out.println("responding...");
       
+      o.write(OK.getBytes());
+      System.out.println("wrote response to socket");
       /*
       String s = scn.nextLine();
       while (s != null) {
@@ -31,11 +38,13 @@ public class Main {
       }
       */
       //w.write("HTTP/1.1 200 OK\r\n\r\n");
-      scn.close();
-      w.close();
-      in.close();
+      i.close();
+      o.close();
+
       out.close();
 
+      serverSocket.close();
+      clientSocket.close();
     }
     catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
