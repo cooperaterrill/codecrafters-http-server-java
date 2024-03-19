@@ -110,7 +110,7 @@ public class ClientHandler implements Runnable {
                 System.out.println("File exists, responding with data");
                 w.write(OK + "\r\n");
                 w.write("Content-Type: application/octet-stream\r\n");
-                w.write("Content-Length: " + file.toString().length() + "\r\n");
+                w.write("Content-Length: " + file.toString().length() + "\r\n\r\n");
 
                 FileReader r = new FileReader(file);
                 BufferedReader read = new BufferedReader(r);
