@@ -10,7 +10,7 @@ public class Main {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
-    //while (true) {
+    while (true) {
       try {
         ServerSocket serverSocket = new ServerSocket(4221);
         serverSocket.setReuseAddress(true);
@@ -31,7 +31,7 @@ public class Main {
       catch (IOException e) {
         System.out.println("IOException: " + e.getMessage());
       }
-   // }
+    }
 
   }
 
