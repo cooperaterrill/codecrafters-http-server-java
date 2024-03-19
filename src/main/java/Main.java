@@ -56,7 +56,9 @@ public class Main {
   }
 
   public static void respondNotFound(OutputStream out) {
-
+    PrintWriter w = new PrintWriter(out);
+    w.write(NOT_FOUND + EOF);
+    w.close();
   }
   public static void respondOk(OutputStream out) {
     PrintWriter w = new PrintWriter(out);
