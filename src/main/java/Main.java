@@ -7,10 +7,9 @@ public class Main {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
-    
     for (int i = 0; i < 3; i++) {
-      TCPServer server = new TCPServer(4221);
-      server.start();
+      ClientHandler client = new ClientHandler(4221+i);
+      client.start();
     }
 
   }
