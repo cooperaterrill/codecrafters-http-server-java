@@ -82,11 +82,11 @@ public class ClientHandler implements Runnable {
         System.out.println("Got path: " + path);
         PrintWriter w = new PrintWriter(out);
 
-        if (path.equals("/")) {
+        if (path.equals("/")) { //status request
             System.out.println("Got path /, responding OK");
             w.write(OK + EOF);
         }
-        else if (path.length() >= 6 && path.substring(0,6).equals("/echo/")) {
+        else if (path.length() >= 6 && path.substring(0,6).equals("/echo/")) { //echo request
             System.out.println("Got path /echo/, responding with inner path");
             String body = path.substring(6);
             w.write(OK + "\r\n");
@@ -94,7 +94,7 @@ public class ClientHandler implements Runnable {
             w.write("Content-Length: " + body.length() + "\r\n\r\n");
             w.write(body + EOF);
         }
-        else if (path.equals("/user-agent")) {
+        else if (path.equals("/user-agent")) { //user agent reqeust
             System.out.println("Got path /user-agent, responding with user agent");
             String userAgent = this.getUserAgent();
             w.write(OK + "\r\n");
@@ -102,7 +102,7 @@ public class ClientHandler implements Runnable {
             w.write("Content-Length: " + userAgent.length() + "\r\n\r\n");
             w.write(userAgent + EOF);
         }
-        else if (path.length() >= 7 && path.substring(0, 7).equals("/files/")) {
+        else if (path.length() >= 7 && path.substring(0, 7).equals("/files/")) { //file request
             System.out.println("Got request for file");
             String filePath = directory + path.substring(7);
             if (new File(filePath).exists()) {
@@ -112,22 +112,20 @@ public class ClientHandler implements Runnable {
                 w.write("Content-Type: application/octet-stream\r\n");
                 w.write("Content-Length: " + file.toString().length() + "\r\n\r\n");
 
-                FileReader r = new FileReader(file);
-                BufferedReader read = new BufferedReader(r);
-
-                String line = "";
-                while ((line = read.readLine()) != null && !line.isEmpty()) {
-                    w.write(line);
+                FileInputStream r = new FileInputStream(file);
+                byte[] contents = r.readAllBytes();
+                for (byte b : contents) {
+                    w.write(b);
                 }
+                
                 w.write(EOF);
-                read.close();
             }
-            else {
+            else { //file not found
                 System.out.println("File does not exist, responding 404");
                 w.write(NOT_FOUND + EOF);
             }
         }
-        else {
+        else { //bad path request
             System.out.println("Got invalid path (404)");
             w.write(NOT_FOUND + EOF);
         }
