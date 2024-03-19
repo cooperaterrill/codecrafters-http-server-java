@@ -1,19 +1,47 @@
 import java.io.*;
 import java.net.*;
-public class ClientHandler {
+public class ClientHandler extends Thread {
     public static final String OK = "HTTP/1.1 200 OK";
     public static final String NOT_FOUND = "HTTP/1.1 404 Not Found";
     public static final String EOF = "\r\n\r\n";
 
+    int port;
     InputStream in;
     OutputStream out;
     String request;
 
+    public ClientHandler(int port) {
+        this.port = port;
+    }
+    /*
     public ClientHandler(Socket clientSocket) throws IOException {
         in = clientSocket.getInputStream();
         out = clientSocket.getOutputStream();
     }
+    */
 
+    public void run() {
+        try {
+            System.out.println("Thread " + Thread.currentThread().getName() + " has begun");
+            ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket.setReuseAddress(true);
+            Socket clientSocket = serverSocket.accept();
+            in = clientSocket.getInputStream();
+            out = clientSocket.getOutputStream();   
+            System.out.println("accepted new connection");
+
+            this.processRequest();
+            System.out.println("Request processed");
+            System.out.println("Got request\n---------\n" + this.request);
+
+            this.respond();
+            System.out.println("Response sent\n");
+            serverSocket.close();
+        }
+        catch (IOException e) {
+            System.out.println("IOExcpetion: " + e.getMessage());
+        }
+    }
     public void processRequest() throws IOException {
         BufferedReader r = new BufferedReader(new InputStreamReader(in));
         StringBuffer res = new StringBuffer();

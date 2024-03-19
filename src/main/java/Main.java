@@ -1,6 +1,3 @@
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class Main {
   public static final String OK = "HTTP/1.1 200 OK";
@@ -10,27 +7,10 @@ public class Main {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
-    while (true) {
-      try {
-        ServerSocket serverSocket = new ServerSocket(4221);
-        serverSocket.setReuseAddress(true);
-        Socket clientSocket = serverSocket.accept();
-        System.out.println("accepted new connection");
-
-        ClientHandler client = new ClientHandler(clientSocket);
-        System.out.println("Initiated new client handler");
-
-        client.processRequest();
-        System.out.println("Request processed");
-        System.out.println("Got request\n---------\n" + client.request);
-
-        client.respond();
-        System.out.println("Response sent\n");
-        serverSocket.close();
-      }
-      catch (IOException e) {
-        System.out.println("IOException: " + e.getMessage());
-      }
+    
+    for (int i = 0; i < 3; i++) {
+      TCPServer server = new TCPServer(4221);
+      server.start();
     }
 
   }
