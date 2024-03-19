@@ -119,6 +119,7 @@ public class ClientHandler implements Runnable {
                 while ((line = read.readLine()) != null && !line.isEmpty()) {
                     w.write(line);
                 }
+                w.write(EOF);
                 read.close();
             }
             else {
