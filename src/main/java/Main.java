@@ -26,11 +26,19 @@ public class Main {
       System.out.println("reading input...");
       String request = readInputStream(i);
       String path = getPath(request);
+
+      if (path.equals("/")) {
+        respondOk(o);
+        serverSocket.close();
+        clientSocket.close();
+        return;
+      }
+      
       String body = getBodyFromPath(path);
       System.out.println("Got body " + body);
 
       System.out.println("responding...");
-      respond(o, body);
+      respondBody(o, body);
       
       System.out.println("wrote response to socket");
       
@@ -49,7 +57,12 @@ public class Main {
     return body;
   }
 
-  public static void respond(OutputStream out, String msg) {
+  public static void respondOk(OutputStream out) {
+    PrintWriter w = new PrintWriter(out);
+    w.write(OK + EOF);
+    w.close();
+  }
+  public static void respondBody(OutputStream out, String msg) {
     PrintWriter w = new PrintWriter(out);
     w.write(OK + "\r\n");
     w.write("Content-Type: text/plain\r\n");
