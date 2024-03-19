@@ -108,17 +108,21 @@ public class ClientHandler implements Runnable {
             if (new File(filePath).exists()) {
                 File file = new File(filePath);
                 System.out.println("File exists, responding with data");
+                /*
                 w.write(OK + "\r\n");
                 w.write("Content-Type: application/octet-stream\r\n");
                 w.write("Content-Length: " + file.toString().length() + "\r\n\r\n");
+                */
 
                 FileInputStream r = new FileInputStream(file);
                 byte[] contents = r.readAllBytes();
-                for (byte b : contents) {
-                    w.write(b);
-                }
+                r.close();
                 
-                w.write(EOF);
+                //we will use an output stream to write bytes
+                out.write((OK+"\r\n"+"Content-Type: application/octet-stream\r\nContent-Length: " + contents.length + "\r\n\r\n" + new String(contents)).getBytes());
+
+                out.write((EOF).getBytes());
+                
             }
             else { //file not found
                 System.out.println("File does not exist, responding 404");
