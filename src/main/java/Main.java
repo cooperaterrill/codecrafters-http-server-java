@@ -29,20 +29,18 @@ public class Main {
 
       if (path.equals("/")) {
         respondOk(o);
-        serverSocket.close();
-        clientSocket.close();
-        return;
       }
-      
-      String body = getBodyFromPath(path);
-      System.out.println("Got body " + body);
+      else if (path.length() >= 6 && path.substring(0,6).equals("/echo/")) {
+        String body = getBodyFromPath(path);
+        System.out.println("Got body " + body); 
+        respondBody(o, path.substring(6));
+      }
+      else {
+        respondNotFound(o);
+      }
 
-      System.out.println("responding...");
-      respondBody(o, body);
+      System.out.println("response sent");
       
-      System.out.println("wrote response to socket");
-      
-
       serverSocket.close();
       clientSocket.close();
       System.out.println("sockets closed");
@@ -57,6 +55,9 @@ public class Main {
     return body;
   }
 
+  public static void respondNotFound(OutputStream out) {
+
+  }
   public static void respondOk(OutputStream out) {
     PrintWriter w = new PrintWriter(out);
     w.write(OK + EOF);
