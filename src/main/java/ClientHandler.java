@@ -19,24 +19,25 @@ public class ClientHandler {
         StringBuffer res = new StringBuffer();
 
         String line;
+        int i = 0;
         while ((line = r.readLine()) != null && !line.isEmpty()) {
-            res.append(line);
+            res.append(line.strip() + "\r\n");
+            i++;
         }
-
+        System.out.println("Processed " + i + " lines");
         request = res.toString();
-        in.close();
     }
 
     public String getPath() {
         String[] lines = request.split("\r\n");
-        return lines[0].split(" ")[1];
+        return lines[0].split(" ")[1].strip();
     }
 
     public String getUserAgent() {
         String[] lines = request.split("\r\n");
         for (String line : lines) {
             if (line.length() >= 12 && line.substring(0,12).equals("User-Agent: ")) {
-                return line.substring(12).trim();
+                return line.substring(12).strip();
             }
         }
     
@@ -45,10 +46,15 @@ public class ClientHandler {
 
     public void respond() throws IOException {
         String path = this.getPath();
+        System.out.println("Got path: " + path);
         PrintWriter w = new PrintWriter(out);
 
-        if (path.equals("/")) w.write(OK + EOF);
+        if (path.equals("/")) {
+            System.out.println("Got path /, responding OK");
+            w.write(OK + EOF);
+        }
         else if (path.length() >= 6 && path.substring(0,6).equals("/echo/")) {
+            System.out.println("Got path /echo/, responding with inner path");
             String body = path.substring(6);
             w.write(OK + "\r\n");
             w.write("Content-Type: text/plain\r\n");
@@ -56,15 +62,19 @@ public class ClientHandler {
             w.write(body + EOF);
         }
         else if (path.equals("/user-agent")) {
+            System.out.println("Got path /user-agent, responding with user agent");
             String userAgent = this.getUserAgent();
             w.write(OK + "\r\n");
             w.write("Content-Type: text/plain\r\n");
             w.write("Content-Length: " + userAgent.length() + "\r\n\r\n");
             w.write(userAgent + EOF);
         }
+        else {
+            System.out.println("Got invalid path");
+            w.write(NOT_FOUND + EOF);
+        }
 
         w.close();
-        out.close();
     }
 
 }

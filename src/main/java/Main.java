@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,9 +10,7 @@ public class Main {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
-
-
-    while (true) {
+    //while (true) {
       try {
         ServerSocket serverSocket = new ServerSocket(4221);
         serverSocket.setReuseAddress(true);
@@ -24,14 +22,16 @@ public class Main {
 
         client.processRequest();
         System.out.println("Request processed");
+        System.out.println("Got request\n---------\n" + client.request);
 
         client.respond();
-        System.out.println("Response sent");
+        System.out.println("Response sent\n");
+        serverSocket.close();
       }
       catch (IOException e) {
         System.out.println("IOException: " + e.getMessage());
       }
-    }
+   // }
 
   }
 
