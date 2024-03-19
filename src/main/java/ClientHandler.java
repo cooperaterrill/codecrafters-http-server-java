@@ -9,16 +9,17 @@ public class ClientHandler implements Runnable {
     InputStream in;
     OutputStream out;
     String request;
-
+    String directory;
     /*
     public ClientHandler(int port) {
         this.port = port;
     }
     */
 
-    public ClientHandler(Socket clientSocket) throws IOException {
+    public ClientHandler(Socket clientSocket, String directory) throws IOException {
         in = clientSocket.getInputStream();
         out = clientSocket.getOutputStream();
+        this.directory = directory;
     }
     
 
@@ -101,8 +102,32 @@ public class ClientHandler implements Runnable {
             w.write("Content-Length: " + userAgent.length() + "\r\n\r\n");
             w.write(userAgent + EOF);
         }
+        else if (path.length() >= 7 && path.substring(0, 7).equals("/files/")) {
+            System.out.println("Got request for file");
+            String filePath = directory + path.substring(7);
+            if (new File(filePath).exists()) {
+                File file = new File(filePath);
+                System.out.println("File exists, responding with data");
+                w.write(OK + "\r\n");
+                w.write("Content-Type: application/octet-stream\r\n");
+                w.write("Content-Length: " + file.toString().length() + "\r\n\r\n");
+
+                FileReader r = new FileReader(file);
+                BufferedReader read = new BufferedReader(r);
+
+                String line = "";
+                while ((line = read.readLine()) != null && !line.isEmpty()) {
+                    w.write(line);
+                }
+                read.close();
+            }
+            else {
+                System.out.println("File does not exist, responding 404");
+                w.write(NOT_FOUND + EOF);
+            }
+        }
         else {
-            System.out.println("Got invalid path");
+            System.out.println("Got invalid path (404)");
             w.write(NOT_FOUND + EOF);
         }
 
