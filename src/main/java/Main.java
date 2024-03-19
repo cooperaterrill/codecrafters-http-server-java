@@ -35,6 +35,10 @@ public class Main {
         System.out.println("Got body " + body); 
         respondBody(o, path.substring(6));
       }
+      else if (path.equals("/user-agent")) {
+        String userAgent = getUserAgent(request);
+        respondOkUserAgent(o, userAgent);
+      }
       else {
         respondNotFound(o);
       }
@@ -50,6 +54,25 @@ public class Main {
     }
   }
 
+  public static String getUserAgent(String request) {
+    String[] lines = request.split("\r\n");
+    for (String line : lines) {
+      if (line.length() >= 12 && line.substring(0,12).equals("User-Agent: ")) {
+        return line.substring(12).trim();
+      }
+    }
+    
+    return null; //no user agent found 
+  }
+
+  public static void respondOkUserAgent(OutputStream out, String agent) {
+    PrintWriter w = new PrintWriter(out);
+    w.write(OK + "\r\n");
+    w.write("Content-Type: text/plain\r\n");
+    w.write("Content-Length: " + agent.length() + "\r\n\r\n");
+    w.write(agent + EOF);
+    w.close();
+  }
   public static String getBodyFromPath(String path) {
     String body = path.substring(6);
     return body;
