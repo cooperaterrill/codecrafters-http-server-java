@@ -71,6 +71,7 @@ public class ClientHandler implements Runnable {
             String header = lines[i].substring(0, separator);
             String val = lines[i].substring(separator+2); //dont count colon or space
             headers.put(header, val);
+            System.out.println("Mapped header " + header + " to value " + val);
         }
     }
 
@@ -86,7 +87,7 @@ public class ClientHandler implements Runnable {
             if (line.length() >= 16 && line.substring(0, 16).equals("Content-Length: ")) {
                 contentLength = Integer.parseInt(line.substring(16));
             }
-            res.append(line);
+            res.append(line + "\r\n");
             line = r.readLine();
             i++;
         }
