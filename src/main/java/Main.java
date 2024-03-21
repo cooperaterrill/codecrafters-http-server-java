@@ -30,7 +30,7 @@ public class Main {
 
       while (true) {
         Socket clientSocket = serverSocket.accept();
-        System.out.println("Accepted new connection -main");
+        System.out.println("\n\nACCEPTED NEW CONNECTION");
         new Thread(new ClientHandler(clientSocket, arguments.get("directory"))).start();
       }
     }
