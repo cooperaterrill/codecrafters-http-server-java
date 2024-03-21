@@ -113,7 +113,7 @@ public class ClientHandler implements Runnable {
             File file = new File(filePath);
             FileWriter fileWriter = new FileWriter(file);
 
-            System.out.println(file.createNewFile() ? "New file created" : "File already exists");
+            //System.out.println(file.createNewFile() ? "New file created" : "File already exists"); TODO: DOES NOT WORK
 
             System.out.println("Writing body: " + body);
             fileWriter.write(body);
